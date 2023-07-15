@@ -1,5 +1,6 @@
 from sqlalchemy import (Column, Integer, Boolean,
-                        VARCHAR, text, TIMESTAMP, Text)
+                        VARCHAR, text, TIMESTAMP, Text,
+                        String)
 
 from database import Base
 
@@ -10,4 +11,14 @@ class Post(Base):
     content = Column(Text, nullable=False)
     published = Column(Boolean, server_default='1', nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False,
+                        server_default=text('CURRENT_TIMESTAMP'))
+
+class User(Base):
+
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True, nullable=False)
+    email = Column(String(255), nullable=False)
+    username = Column(String(255), nullable=False, unique=True)
+    password = Column(String(255), nullable=False)
+    joined_on = Column(TIMESTAMP(timezone=True), nullable=False,
                         server_default=text('CURRENT_TIMESTAMP'))
