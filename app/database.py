@@ -5,7 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from urllib import parse
 
 config = configparser.ConfigParser()
-config.read("config.ini")
+config.read("app/config.ini")
 
 PASSWORD = parse.quote(config.get("database","PASSWORD"))
 host = config.get("database","HOST")
