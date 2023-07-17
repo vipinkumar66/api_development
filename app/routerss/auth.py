@@ -16,10 +16,10 @@ def user_login(user_credentials:OAuth2PasswordRequestForm = Depends(), db:Sessio
 
     user_details = db.query(models.User).filter(models.User.email == user_credentials.username).first()
     if not user_details:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid Credentials")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid Credentials")
 
     if not utils.verify_password(user_credentials.password, user_details.password):
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid Credentials")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid Credentials")
 
     jwt_token = oauth2.generate_token({"user_id":user_details.id})
 
