@@ -6,9 +6,12 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app import models, schemas
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/sqlalchemy",
+    tags=['Posts']
+)
 
-@router.get('/sqlalchemy', response_model=List[schemas.PostResponse])
+@router.get('/', response_model=List[schemas.PostResponse])
 def getall_posts(db:Session = Depends(get_db)):
     """
     This is to talk to the database and get the
@@ -18,7 +21,7 @@ def getall_posts(db:Session = Depends(get_db)):
     return posts
 
 
-@router.post('/sqlalchemy/createpost', response_model=schemas.PostResponse)
+@router.post('/createpost', response_model=schemas.PostResponse)
 def create_new_post(post:schemas.PostResponse, db:Session=Depends(get_db)):
     # new_post = models.Post(title = post.title, content=post.content, published=post.published)
     new_post = models.Post(**post.dict())
@@ -28,7 +31,7 @@ def create_new_post(post:schemas.PostResponse, db:Session=Depends(get_db)):
     return new_post
 
 
-@router.get('/sqlalchemy/posts/<int:pk>')
+@router.get('/posts/<int:pk>')
 def get_individual_post(id:int, db:Session=Depends(get_db)):
     post = db.query(models.Post).filter(models.Post.id == id).first()
     if not post:
@@ -37,7 +40,7 @@ def get_individual_post(id:int, db:Session=Depends(get_db)):
     return post
 
 
-@router.get('/sqlalchemy/post/delete/<id:int>')
+@router.get('/post/delete/<id:int>')
 def delete_post(id:int, db:Session=Depends(get_db)):
     post = db.query(models.Post).filter(models.Post.id == id)
     if post.first() is None:
@@ -47,7 +50,7 @@ def delete_post(id:int, db:Session=Depends(get_db)):
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
-@router.put('/sqlalchemy/post/update/<id:int>')
+@router.put('/post/update/<id:int>')
 def update_post(id:int, post:schemas.PostCreate, db:Session=Depends(get_db)):
     post_query = db.query(models.Post).filter(models.Post.id == id)
     first_post = post_query.first()

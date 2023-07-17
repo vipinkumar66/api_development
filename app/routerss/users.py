@@ -6,9 +6,12 @@ from app.database import get_db
 from app import models, schemas
 from app.utils import hash_password
 
-router = APIRouter()
+router = APIRouter(
+    prefix='/users',
+    tags=['Users']
+)
 
-@router.post('/users/register', status_code=status.HTTP_201_CREATED, response_model=schemas.UserOut)
+@router.post('/register', status_code=status.HTTP_201_CREATED, response_model=schemas.UserOut)
 def create_new_users(user: schemas.UserBase, db:Session=Depends(get_db)):
 
     # HASHING THE PASSWORD
@@ -21,7 +24,7 @@ def create_new_users(user: schemas.UserBase, db:Session=Depends(get_db)):
     db.refresh(new_user)
     return new_user
 
-@router.get('/users/{id}', response_model=schemas.UserOut)
+@router.get('/{id}', response_model=schemas.UserOut)
 def get_user(id:int, db:Session=Depends(get_db)):
 
     user = db.query(models.User).filter(models.User.id == id).first()
