@@ -1,6 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
 from typing import Optional
+
 class PostBase(BaseModel):
     title:str
     content:str
@@ -16,6 +17,8 @@ class PostResponse(PostBase):
     but now they will not be included
     """
     title: str
+    # created_at: datetime
+    user_id:int
 
     class Config:
         orm_mode = True
@@ -37,7 +40,7 @@ class UserLogin(BaseModel):
     password:str
 
 class Token(BaseModel):
-    access_toke: str
+    access_token: str
     token_type : str
 
 class TokenData(BaseModel):

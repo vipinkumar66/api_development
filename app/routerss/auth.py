@@ -10,7 +10,7 @@ router = APIRouter(
     tags=['Authentication']
 )
 
-@router.post('/login')
+@router.post('/login', response_model=schemas.Token)
 # def user_login(user_credentials:schemas.UserLogin, db:Session=Depends(get_db)):
 def user_login(user_credentials:OAuth2PasswordRequestForm = Depends(), db:Session=Depends(get_db)):
 
@@ -23,6 +23,6 @@ def user_login(user_credentials:OAuth2PasswordRequestForm = Depends(), db:Sessio
 
     jwt_token = oauth2.generate_token({"user_id":user_details.id})
 
-    return {"Token":jwt_token, "Token Type":"Bearer"}
+    return {"access_token":jwt_token, "token_type":"Bearer"}
 
 
