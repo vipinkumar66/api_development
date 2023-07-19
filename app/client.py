@@ -2,7 +2,7 @@ import requests
 
 endpoint = "http://127.0.0.1:8000/users/register"
 get_user = "http://127.0.0.1:8000/users/1"
-get_all_posts = "http://127.0.0.1:8000/sqlalchemy"
+get_all_posts = "http://127.0.0.1:8000/sqlalchemy?search=django"
 login_endpoint = "http://127.0.0.1:8000/login"
 create_endpoint = "http://127.0.0.1:8000/sqlalchemy/createpost"
 get_post = "http://127.0.0.1:8000/sqlalchemy/posts/7"
@@ -26,18 +26,17 @@ data = {
 }
 
 post_data = {
-  'title': 'Django Rest Framework',
-  'content': 'Python framework which helps in creating a strong backend',
-}
+  'title': 'DS',
+  'content': 'DS stands for the data structures and they are basically used to store the data.', 'published': 'true'}
+
 
 post_header = {
-  "Authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2ODk2NTA1Njd9.Tywf8d-CRGzPE5nO1UWvhowQZHRya8jpBpM6T59jG2k"
+  "Authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2ODk3MzExNzN9.g9Jgrhi0im2fM4GW2smVragnyM17R_76jU0TVYZpu60"
 }
 # json=post_data
 # response = requests.post(login_endpoint, json=login_data)
-response = requests.post(create_endpoint, json=post_data, headers=post_header)
+# response = requests.post(create_endpoint, json=post_data, headers=post_header)
 # response = requests.post(login_endpoint, data=login_data)
+response = requests.get(get_all_posts, headers=post_header)
 
 print(response.json())
-"""
-[{'title': 'Django Rest Framework', 'content': 'Python framework which helps in creating a strong backend', 'published': True}, {'title': 'Reactue}, {'title': 'OOPS', 'content': 'Object orientation programming. Here we make use of objects and classes.', 'published': True}, {'title': 'JWT TOKEN', 'content': 'This is a third party package that is used with the fastapi and some other frameworks like DRF for the authentication purpose as the server is stateless', 'published': True}]"""

@@ -1,6 +1,6 @@
 from fastapi import (HTTPException, Depends, status, Response,
                      APIRouter)
-from typing import List
+from typing import List, Optional
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -13,13 +13,13 @@ router = APIRouter(
 )
 
 @router.get('/', response_model=List[schemas.PostResponse])
-def getall_posts(db:Session = Depends(get_db), current_user:int = Depends(oauth2.get_current_user)):
+def getall_posts(db:Session = Depends(get_db), current_user:int = Depends(oauth2.get_current_user), limit:int=10, skip:int=0, search:Optional[str] = ""):
     """
     This is to talk to the database and get the
     required data
     """
-    print(current_user.email)
-    posts = db.query(models.Post).all()
+    # print(current_user.email)
+    posts = db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
     return posts
 
 
