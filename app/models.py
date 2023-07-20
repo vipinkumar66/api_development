@@ -14,7 +14,7 @@ class User(Base):
     joined_on = Column(TIMESTAMP(timezone=True), nullable=False,
                         server_default=text('CURRENT_TIMESTAMP'))
 
-    # posts = relationship("Post", back_populates="owner")
+    # posts = relationship("Votes", back_populates="owner")
 
 class Post(Base):
     __tablename__ = "posts"
@@ -26,5 +26,12 @@ class Post(Base):
                         server_default=text('CURRENT_TIMESTAMP'))
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
 
-    # owner = relationship("User", back_populates="posts")
+
+class Votes(Base):
+    __tablename__= "votes"
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
+    post_id = Column(Integer, ForeignKey("posts.id", ondelete="CASCADE"), primary_key=True)
+    # owner = relationship("User", back_populates="posts"),
+
+
 

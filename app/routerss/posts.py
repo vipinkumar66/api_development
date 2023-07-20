@@ -2,6 +2,7 @@ from fastapi import (HTTPException, Depends, status, Response,
                      APIRouter)
 from typing import List, Optional
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 
 from app.database import get_db
 from app import models, schemas
@@ -13,6 +14,7 @@ router = APIRouter(
 )
 
 @router.get('/', response_model=List[schemas.PostResponse])
+# @router.get('/')
 def getall_posts(db:Session = Depends(get_db), current_user:int = Depends(oauth2.get_current_user), limit:int=10, skip:int=0, search:Optional[str] = ""):
     """
     This is to talk to the database and get the
@@ -20,7 +22,16 @@ def getall_posts(db:Session = Depends(get_db), current_user:int = Depends(oauth2
     """
     # print(current_user.email)
     posts = db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
-    return posts
+
+    results = db.query(models.Post, func.count(models.Votes.post_id).label("votes")).join(models.Votes, models.Votes.post_id == models.Post.id , isouter=True).group_by(models.Post.id).all()
+    posts_list = []
+    for post, votes in results:
+        post_dict = post.__dict__  # Get the Post object as a dictionary
+        post_dict["votes"] = votes  # Add the vote count to the dictionary
+        posts_list.append(post_dict)
+
+    return posts_list
+
 
 
 @router.post('/createpost', response_model=schemas.PostResponse)
